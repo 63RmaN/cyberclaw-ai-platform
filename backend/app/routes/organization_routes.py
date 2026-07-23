@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from backend.app.database import SessionLocal
@@ -41,13 +41,23 @@ def read_organizations(
 
 @router.post(
     "",
-    response_model=OrganizationResponse
+    response_model=OrganizationResponse,
+    status_code=status.HTTP_201_CREATED
 )
 def create_new_organization(
     organization: OrganizationCreate,
     db: Session = Depends(get_db)
 ):
-    return create_organization(
+
+    result = create_organization(
         db,
         organization
     )
+
+    if result is None:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Organization already exists"
+        )
+
+    return result

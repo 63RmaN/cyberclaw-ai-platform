@@ -12,6 +12,19 @@ def create_organization(
     db: Session,
     organization: OrganizationCreate
 ):
+
+    existing = (
+        db.query(Organization)
+        .filter(
+            Organization.name == organization.name
+        )
+        .first()
+    )
+
+    if existing:
+        return None
+
+
     db_organization = Organization(
         name=organization.name,
         description=organization.description
