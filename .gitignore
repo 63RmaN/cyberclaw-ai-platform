@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Environment variables
+.env
+
+# Node.js
+node_modules/
+
+# Logs
+*.log
+
+# Database files
+*.sqlite
+*.db
+
+# AI models and large files
+models/
+*.bin
+*.gguf
+
+# Operating system files
+Thumbs.db
+.DS_Store
