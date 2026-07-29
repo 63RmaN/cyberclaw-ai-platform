@@ -8,6 +8,7 @@ from backend.app.routes.user_routes import router as user_router
 from backend.app.routes.auth_routes import router as auth_router
 from backend.app.routes.audit_routes import router as audit_router
 from backend.app.routes.endpoint_routes import router as endpoint_router
+from backend.app.routes.agent_routes import router as agent_router
 
 
 Base.metadata.create_all(bind=engine)
@@ -25,7 +26,7 @@ app.include_router(user_router)
 app.include_router(auth_router)
 app.include_router(audit_router)
 app.include_router(endpoint_router)
-
+app.include_router(agent_router)
 
 @app.get("/")
 def root():
