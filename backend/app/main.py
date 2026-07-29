@@ -2,8 +2,12 @@ from fastapi import FastAPI
 
 from backend.app.database import engine, Base
 from backend.app import models
+
 from backend.app.routes.organization_routes import router as organization_router
 from backend.app.routes.user_routes import router as user_router
+from backend.app.routes.auth_routes import router as auth_router
+from backend.app.routes.audit_routes import router as audit_router
+from backend.app.routes.endpoint_routes import router as endpoint_router
 
 
 Base.metadata.create_all(bind=engine)
@@ -18,6 +22,9 @@ app = FastAPI(
 
 app.include_router(organization_router)
 app.include_router(user_router)
+app.include_router(auth_router)
+app.include_router(audit_router)
+app.include_router(endpoint_router)
 
 
 @app.get("/")
