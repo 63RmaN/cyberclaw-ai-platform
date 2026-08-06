@@ -14,6 +14,8 @@ class DocumentCreate(BaseModel):
 
     storage_path: str
 
+    document_hash: str | None = None
+
 
 
 class DocumentResponse(BaseModel):

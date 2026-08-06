@@ -3,7 +3,8 @@ from fastapi import (
     Depends,
     status,
     UploadFile,
-    File
+    File,
+    HTTPException
 )
 
 from sqlalchemy.orm import Session
@@ -15,12 +16,18 @@ from backend.app.services.document_service import (
     create_document,
     get_documents,
     get_documents_by_knowledge_base,
-    get_document_by_id
+    get_document_by_id,
+    get_document_by_hash
 )
 
 
 from backend.app.services.document_upload_service import (
     save_uploaded_document
+)
+
+
+from backend.app.services.document_hash_service import (
+    calculate_file_hash
 )
 
 
@@ -100,11 +107,31 @@ def upload_document(
     )
 
 
+    document_hash = calculate_file_hash(
+        file_path
+    )
+
+
+    existing_document = get_document_by_hash(
+        db,
+        document_hash
+    )
+
+
+    if existing_document:
+
+        raise HTTPException(
+            status_code=409,
+            detail="Document already exists"
+        )
+
+
     document = DocumentCreate(
         knowledge_base_id=knowledge_base_id,
         filename=file.filename,
         file_type=file.content_type,
-        storage_path=file_path
+        storage_path=file_path,
+        document_hash=document_hash
     )
 
 

@@ -15,6 +15,7 @@ def create_document(
         filename=document.filename,
         file_type=document.file_type,
         storage_path=document.storage_path,
+        document_hash=document.document_hash,
         status="Uploaded"
     )
 
@@ -55,6 +56,17 @@ def get_document_by_id(
 
     return db.query(Document).filter(
         Document.id == document_id
+    ).first()
+
+
+
+def get_document_by_hash(
+    db: Session,
+    document_hash: str
+):
+
+    return db.query(Document).filter(
+        Document.document_hash == document_hash
     ).first()
 
 
