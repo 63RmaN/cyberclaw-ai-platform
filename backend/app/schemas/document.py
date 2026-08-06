@@ -3,6 +3,7 @@ from datetime import datetime
 from pydantic import BaseModel
 
 
+
 class DocumentCreate(BaseModel):
 
     knowledge_base_id: int
@@ -29,9 +30,9 @@ class DocumentResponse(BaseModel):
 
     status: str
 
-    extracted_text: str | None = None
-
     created_at: datetime
+
+    processed_at: datetime | None = None
 
 
     class Config:

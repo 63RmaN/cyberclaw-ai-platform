@@ -58,6 +58,7 @@ def get_document_by_id(
     ).first()
 
 
+
 def update_document_status(
     db: Session,
     document_id: int,
@@ -74,9 +75,35 @@ def update_document_status(
         document.status = status
 
         if status == "Processed":
+
             from datetime import datetime
+
             document.processed_at = datetime.utcnow()
 
+
+        db.commit()
+
+        db.refresh(document)
+
+
+    return document
+
+
+
+def update_extracted_text(
+    db: Session,
+    document_id: int,
+    extracted_text: str
+):
+
+    document = db.query(Document).filter(
+        Document.id == document_id
+    ).first()
+
+
+    if document:
+
+        document.extracted_text = extracted_text
 
         db.commit()
 

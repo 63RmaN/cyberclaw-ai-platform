@@ -15,8 +15,10 @@ from backend.app.services.document_chunk_service import (
 )
 
 from backend.app.services.document_service import (
-    update_document_status
+    update_document_status,
+    update_extracted_text
 )
+
 
 
 def ingest_document(
@@ -42,6 +44,7 @@ def ingest_document(
 
     print("Extracting document text...")
 
+
     text = extract_text_from_pdf(
         file_path
     )
@@ -52,7 +55,23 @@ def ingest_document(
     )
 
 
+    print("Saving extracted text...")
+
+
+    update_extracted_text(
+        db=db,
+        document_id=document_id,
+        extracted_text=text
+    )
+
+
+    print(
+        "Extracted text saved"
+    )
+
+
     print("Creating chunks...")
+
 
     chunks = chunk_text(
         text

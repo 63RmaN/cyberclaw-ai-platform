@@ -1,7 +1,15 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import (
+    APIRouter,
+    Depends,
+    status,
+    UploadFile,
+    File
+)
+
 from sqlalchemy.orm import Session
 
 from backend.app.database import SessionLocal
+
 
 from backend.app.services.document_service import (
     create_document,
@@ -10,10 +18,22 @@ from backend.app.services.document_service import (
     get_document_by_id
 )
 
+
+from backend.app.services.document_upload_service import (
+    save_uploaded_document
+)
+
+
+from backend.app.services.knowledge_ingestion_service import (
+    ingest_document
+)
+
+
 from backend.app.schemas.document import (
     DocumentCreate,
     DocumentResponse
 )
+
 
 
 router = APIRouter(
@@ -61,6 +81,47 @@ def create_new_document(
         db,
         document
     )
+
+
+
+@router.post(
+    "/upload",
+    response_model=DocumentResponse,
+    status_code=status.HTTP_201_CREATED
+)
+def upload_document(
+    knowledge_base_id: int,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db)
+):
+
+    file_path = save_uploaded_document(
+        file
+    )
+
+
+    document = DocumentCreate(
+        knowledge_base_id=knowledge_base_id,
+        filename=file.filename,
+        file_type=file.content_type,
+        storage_path=file_path
+    )
+
+
+    db_document = create_document(
+        db,
+        document
+    )
+
+
+    ingest_document(
+        db=db,
+        document_id=db_document.id,
+        file_path=file_path
+    )
+
+
+    return db_document
 
 
 
