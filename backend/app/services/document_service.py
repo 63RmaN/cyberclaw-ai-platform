@@ -56,3 +56,31 @@ def get_document_by_id(
     return db.query(Document).filter(
         Document.id == document_id
     ).first()
+
+
+def update_document_status(
+    db: Session,
+    document_id: int,
+    status: str
+):
+
+    document = db.query(Document).filter(
+        Document.id == document_id
+    ).first()
+
+
+    if document:
+
+        document.status = status
+
+        if status == "Processed":
+            from datetime import datetime
+            document.processed_at = datetime.utcnow()
+
+
+        db.commit()
+
+        db.refresh(document)
+
+
+    return document
