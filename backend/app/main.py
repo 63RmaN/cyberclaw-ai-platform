@@ -11,6 +11,7 @@ from backend.app.routes.endpoint_routes import router as endpoint_router
 from backend.app.routes.agent_routes import router as agent_router
 from backend.app.routes.agent_language_routes import router as agent_language_router
 from backend.app.routes.knowledge_base_routes import router as knowledge_base_router
+from backend.app.routes.document_routes import router as document_router
 
 
 Base.metadata.create_all(bind=engine)
@@ -31,6 +32,7 @@ app.include_router(endpoint_router)
 app.include_router(agent_router)
 app.include_router(agent_language_router)
 app.include_router(knowledge_base_router)
+app.include_router(document_router)
 
 @app.get("/")
 def root():
